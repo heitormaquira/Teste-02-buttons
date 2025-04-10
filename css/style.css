@@ -28,7 +28,7 @@ body {
     flex-wrap: nowrap;
     overflow-x: auto; /* Adiciona rolagem horizontal apenas se for necessário */
     max-width: 100%;
-    padding: 0 55px;
+    padding: 0 20px;
     margin-bottom: 0;
 }
 
