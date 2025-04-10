@@ -70,5 +70,5 @@ body {
 
 .card:hover {
     transform: scale(1.02);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+    box-shadow: 0 4px 7px rgba(0, 0, 0, 0.08);
 }
