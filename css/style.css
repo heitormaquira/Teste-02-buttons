@@ -1,0 +1,74 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #ffffff;
+    font-family: 'Merriweather Sans', sans-serif;
+    overflow-y: hidden; /* Impede a rolagem vertical */
+    overflow-x: hidden; /* Impede a rolagem horizontal */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 30vh;
+    max-width: 100%;
+    padding: 0;
+    margin-bottom: 0;
+    overflow: hidden; /* Garante que nada transborde do container */
+}
+
+.card-container {
+    display: flex;
+    justify-content: center; /* Centraliza os cards */
+    flex-wrap: nowrap;
+    overflow-x: auto; /* Adiciona rolagem horizontal apenas se for necessário */
+    max-width: 100%;
+    padding: 0 55px;
+    margin-bottom: 0;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+    height: 65px; /* Altura fixa */
+    width: 100px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-right: 20px; /* Espaçamento entre os cards */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Impede que a imagem transborde ao escalar */
+}
+
+.card:last-child {
+    margin-right: 0; /* Remove o margin-right do último card */
+}
+
+.card-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-bottom: 0;
+}
+
+.card-img {
+    width: 70px;
+    height: auto; /* Permite que a altura se ajuste automaticamente */
+    max-height: 110%; /* Limita a altura da imagem */
+    max-width: 110%; /* Limita a largura da imagem */
+    align-items: center;
+    object-fit: contain; /* Mantém a proporção da imagem */
+    transition: none; /* Remove qualquer transição na imagem */
+}
+
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+}
