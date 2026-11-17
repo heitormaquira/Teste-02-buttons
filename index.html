@@ -8,7 +8,7 @@
         :root {
             --tam: 68px;          /* tamanho do cubo (a caixa do Google Sites tem ~88px de altura) */
             --raio: 14px;         /* canto arredondado das faces */
-            --duracao: 16s;       /* tempo de uma volta completa (4 faces) */
+            --duracao: 2.5s;      /* tempo da volta ao passar o mouse */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,9 +45,7 @@
             width: 100%;
             height: 100%;
             transform-style: preserve-3d;
-            animation: girar var(--duracao) cubic-bezier(.65, 0, .35, 1) infinite;
-            /* cada cubo começa num momento diferente → efeito "onda" */
-            animation-delay: calc(var(--i) * -0.7s);
+            transform: translateZ(calc(var(--tam) / -2));   /* parado, mostrando a frente */
         }
 
         .face {
@@ -68,19 +66,15 @@
         .face:nth-child(3) { transform: rotateY(180deg) translateZ(calc(var(--tam) / 2)); }
         .face:nth-child(4) { transform: rotateY(270deg) translateZ(calc(var(--tam) / 2)); }
 
-        /* Gira 90°, para um pouco, gira de novo — parece um cubo "virando" */
+        /* Ao passar o mouse (ou focar com Tab): dá uma volta completa e destaca */
         @keyframes girar {
-            0%, 18%   { transform: translateZ(calc(var(--tam) / -2)) rotateY(0deg); }
-            25%, 43%  { transform: translateZ(calc(var(--tam) / -2)) rotateY(-90deg); }
-            50%, 68%  { transform: translateZ(calc(var(--tam) / -2)) rotateY(-180deg); }
-            75%, 93%  { transform: translateZ(calc(var(--tam) / -2)) rotateY(-270deg); }
-            100%      { transform: translateZ(calc(var(--tam) / -2)) rotateY(-360deg); }
+            from { transform: translateZ(calc(var(--tam) / -2)) rotateY(0deg); }
+            to   { transform: translateZ(calc(var(--tam) / -2)) rotateY(-360deg); }
         }
-
-        /* Passou o mouse (ou focou com Tab): para de girar e destaca */
-        .cubo:hover .cubo-giro,
-        .cubo:focus-visible .cubo-giro {
-            animation-play-state: paused;
+        /* a classe "gira" é colocada pelo script lá embaixo quando o mouse encosta,
+           e só sai quando a volta termina — assim o giro sempre completa */
+        .cubo.gira .cubo-giro {
+            animation: girar var(--duracao) cubic-bezier(.65, 0, .35, 1);
         }
         .cubo:hover .face,
         .cubo:focus-visible .face {
@@ -90,7 +84,7 @@
 
         /* Quem pediu menos movimento no sistema operacional não vê a animação */
         @media (prefers-reduced-motion: reduce) {
-            .cubo-giro { animation: none; transform: none; }
+            .cubo.gira .cubo-giro { animation: none; }
         }
     </style>
 </head>
@@ -111,5 +105,15 @@
         <a class="cubo" style="--i:11; --logo:url('https://maquira.com.br/wp-content/uploads/2026/01/DPOnet.png')"      href="https://app.dponet.com.br/" target="_blank" rel="noopener" title="DPOnet" aria-label="DPOnet"><span class="cubo-giro"><span class="face"></span><span class="face"></span><span class="face"></span><span class="face"></span></span></a>
         <a class="cubo" style="--i:12; --logo:url('https://maquira.com.br/wp-content/uploads/2026/01/Totvs-Chile.png')" href="http://maq-srv-erp-01:4321/?StartProg=SIGAMDI&Comm=TCP&Env=Envmaqch" target="_blank" rel="noopener" title="TOTVS Chile" aria-label="TOTVS Chile"><span class="cubo-giro"><span class="face"></span><span class="face"></span><span class="face"></span><span class="face"></span></span></a>
     </nav>
+
+    <script>
+        // Mouse encostou (ou focou com Tab) → começa a girar; a volta termina sozinha
+        document.querySelectorAll('.cubo').forEach(function (cubo) {
+            function girar() { cubo.classList.add('gira'); }
+            cubo.addEventListener('mouseenter', girar);
+            cubo.addEventListener('focus', girar);
+            cubo.addEventListener('animationend', function () { cubo.classList.remove('gira'); });
+        });
+    </script>
 </body>
 </html>
