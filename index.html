@@ -66,10 +66,11 @@
         .face:nth-child(3) { transform: rotateY(180deg) translateZ(calc(var(--tam) / 2)); }
         .face:nth-child(4) { transform: rotateY(270deg) translateZ(calc(var(--tam) / 2)); }
 
-        /* Ao passar o mouse (ou focar com Tab): dá uma volta completa e destaca */
+        /* Ao passar o mouse (ou focar com Tab): dá uma volta completa e destaca.
+           --volta é definida pelo script: +360deg = gira p/ direita, -360deg = p/ esquerda */
         @keyframes girar {
             from { transform: translateZ(calc(var(--tam) / -2)) rotateY(0deg); }
-            to   { transform: translateZ(calc(var(--tam) / -2)) rotateY(-360deg); }
+            to   { transform: translateZ(calc(var(--tam) / -2)) rotateY(var(--volta, -360deg)); }
         }
         /* a classe "gira" é colocada pelo script lá embaixo quando o mouse encosta,
            e só sai quando a volta termina — assim o giro sempre completa */
@@ -107,11 +108,21 @@
     </nav>
 
     <script>
-        // Mouse encostou (ou focou com Tab) → começa a girar; a volta termina sozinha
+        // Mouse encostou → descobre de que lado veio e gira empurrado naquela direção.
+        // Veio da esquerda → gira da esquerda p/ direita; veio da direita → da direita p/ esquerda.
+        // A volta sempre termina antes de aceitar um novo giro.
         document.querySelectorAll('.cubo').forEach(function (cubo) {
-            function girar() { cubo.classList.add('gira'); }
-            cubo.addEventListener('mouseenter', girar);
-            cubo.addEventListener('focus', girar);
+            function girar(sentido) {
+                if (cubo.classList.contains('gira')) return;   // ainda girando: deixa terminar
+                cubo.style.setProperty('--volta', sentido);
+                cubo.classList.add('gira');
+            }
+            cubo.addEventListener('mouseenter', function (e) {
+                var r = cubo.getBoundingClientRect();
+                var veioDaEsquerda = e.clientX < r.left + r.width / 2;
+                girar(veioDaEsquerda ? '360deg' : '-360deg');
+            });
+            cubo.addEventListener('focus', function () { girar('-360deg'); });  // Tab: sentido padrão
             cubo.addEventListener('animationend', function () { cubo.classList.remove('gira'); });
         });
     </script>
